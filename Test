@@ -1,0 +1,120 @@
+import com.sun.source.util.SourcePositions;
+
+import java.io.IOException;
+import java.sql.SQLOutput;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args){
+
+        String num,tnum,romNum;
+        String a = null,b = null;
+        String x,y;
+        int rez = 0;
+        int lenNum;
+        char ch, zn = 0;
+        int per1 = 0, per2 = 0, z = 0,k = 0;
+        Scanner sc = new Scanner(System.in);
+
+        while(rez==0){
+            System.out.println("Введите значение от 1 до 10 или от I до X, знак действия и снова значение от 1 до 10 или от I до X:");
+            num = sc.nextLine();
+            tnum = num;
+            tnum = tnum.replaceAll("\\s", "");
+            lenNum = tnum.length();
+
+            for (int i = 0; i<lenNum; i++){
+                ch = tnum.charAt(i);
+                if(ch == '+') {zn = '+'; z++;}
+                else if(ch == '-') {zn = '-'; z++;}
+                else if(ch == '*') {zn = '*'; z++;}
+                else if(ch == '/') {zn = '/'; z++;}
+            }
+
+            if(z>1 | z==0){
+                try{
+                    throw new IOException();
+                }
+                catch (IOException e){
+                    System.out.println("Неверный формат ввода! Введите выражение повторно.");
+                    break;
+                }
+            }
+
+            for (int i = 0; i<lenNum; i++){
+                ch = tnum.charAt(i);
+                a += ch;
+                if(ch == zn) break;
+            }
+            a = a.substring(4,a.length()-1);
+            b = tnum.substring(a.length()+1,lenNum);
+
+            System.out.println(a);
+            System.out.println(b);
+
+            if(a.contains("I") | a.contains("V") | a.contains("X")){
+                k++;
+                try{
+                    RomeNumber rna = RomeNumber.valueOf(a);
+                }
+                catch (IllegalArgumentException e){
+                    System.out.println("Введены неверные данные! Введите выражение повторно.");
+                    break;
+                }
+                RomeNumber rna = RomeNumber.valueOf(a);
+                per1 = rna.getTranslation();
+            }
+            else{
+                per1 = Integer.parseInt(a);
+            }
+            if(b.contains("I") | b.contains("V") | b.contains("X")){
+                k++;
+                try{
+                    RomeNumber rnb = RomeNumber.valueOf(b);
+                }
+                catch (IllegalArgumentException e){
+                    System.out.println("Введены неверные данные! Введите выражение повторно.");
+                    break;
+                }
+                RomeNumber rnb = RomeNumber.valueOf(b);
+                per2 = rnb.getTranslation();
+            }
+            else{
+                per2 = Integer.parseInt(b);
+            }
+            if(k==1){
+                try{
+                    throw new IOException();
+                }
+                catch (IOException e){
+                    System.out.println("Используются одновременно разные системы счисления!");
+                    break;
+                }
+            }
+            if(per1 == 0 | per2 == 0){
+                try{
+                    throw new IOException();
+                }
+                catch (IOException e){
+                    System.out.println("Введено недопустимое значение!");
+                    break;
+                }
+            }
+            if(per1 > 10 | per2 > 10){
+                try{
+                    throw new IOException();
+                }
+                catch (IOException e){
+                    System.out.println("Введено превышающее допустимого значение!");
+                    break;
+                }
+            }
+            if(zn == '+')rez = per1+per2;
+            else if(zn == '-')rez = per1-per2;
+            else if(zn == '*')rez = per1*per2;
+            else rez = per1/per2;
+            System.out.print("Результат: ");
+            System.out.println(rez);
+        }
+    }
+}
